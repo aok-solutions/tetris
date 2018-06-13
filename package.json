@@ -4,6 +4,7 @@
   "description": "Tetris programming exercise (DRW)",
   "main": "tetris.js",
   "scripts": {
+    "start": "node tetris.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ayanga",
