@@ -2,5 +2,5 @@
 
 ### Usage
 ```
-node tetris.js
+node tetris.js [filename]
 ```
