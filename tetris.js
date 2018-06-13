@@ -2,10 +2,6 @@ let filename = process.argv.slice(2)[0]
 let fs = require('fs')
 let tetrisBlock = require('./blocks.js')
 
-let tetrisBoard = [
-  [],[],[],[],[],[],[],[],[],[]
-]
-
 const positionBlock = (blockType, column, row) => {
   switch (blockType) {
     case 'I':
@@ -17,22 +13,24 @@ const positionBlock = (blockType, column, row) => {
   }
 }
 
-const placeBlock = (block, row) => {
+const placeBlock = (block, row, board) => {
   let blocktype = block.charAt(0)
   let blockColumn = parseInt(block.charAt(1))
   let coordinates = positionBlock(blocktype, blockColumn, row)
   console.log("coordinates are: ", coordinates)
 
-  if (isSpaceFree(coordinates)) {
-    coordinates.map(coordinate => tetrisBoard[coordinate[1]][coordinate[0]] = "X")
+  if (isSpaceFree(coordinates, board)) {
+    coordinates.map(coordinate => board[coordinate[1]][coordinate[0]] = "X")
   } else {
-    placeBlock(block, row + 1)
+    placeBlock(block, row + 1, board)
   }
+
+  return board
 }
 
-const isSpaceFree = (coordinates) => {
+const isSpaceFree = (coordinates, board) => {
   return coordinates
-    .map(coordinate => typeof tetrisBoard[coordinate[1]][coordinate[0]] == 'undefined')
+    .map(coordinate => typeof board[coordinate[1]][coordinate[0]] == 'undefined')
     .reduce((accumulator, current) => accumulator && current)
 }
 
@@ -47,11 +45,17 @@ fs.readFile(filename, (error, data) => {
 
   input.map(game => {
     console.log("game: ", game)
-    game.split(",").map(move => {
-      console.log("next move: ", move)
-      placeBlock(move, 0)
-    })
-  })
+    let tetrisBoard = [
+      [],[],[],[],[],[],[],[],[],[]
+    ]
 
-  console.log(tetrisBoard)
+    let board = game
+      .split(",")
+      .reduce((updatedGame, move) => {
+        console.log("next move: ", move)
+        return placeBlock(move, 0, updatedGame)
+      }, tetrisBoard)
+
+    console.log(board)
+  })
 })
