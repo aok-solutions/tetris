@@ -10,6 +10,21 @@ const positionBlock = (blockType, column, row) => {
     case 'Q':
       return tetrisBlock.Q(column, row)
       break;
+    case 'L':
+      return tetrisBlock.L(column, row)
+      break;
+    case 'J':
+      return tetrisBlock.J(column, row)
+      break;
+    case 'Z':
+      return tetrisBlock.Z(column, row)
+      break;
+    case 'S':
+      return tetrisBlock.S(column, row)
+      break;
+    case 'T':
+      return tetrisBlock.T(column, row)
+      break;
   }
 }
 
@@ -17,7 +32,6 @@ const placeBlock = (block, row, board) => {
   let blocktype = block.charAt(0)
   let blockColumn = parseInt(block.charAt(1))
   let coordinates = positionBlock(blocktype, blockColumn, row)
-  console.log("coordinates are: ", coordinates)
 
   if (isSpaceFree(coordinates, board)) {
     coordinates.map(coordinate => board[coordinate[1]][coordinate[0]] = "X")
@@ -52,7 +66,6 @@ fs.readFile(filename, (error, data) => {
     let board = game
       .split(",")
       .reduce((updatedGame, move) => {
-        console.log("next move: ", move)
         return placeBlock(move, 0, updatedGame)
       }, tetrisBoard)
 
