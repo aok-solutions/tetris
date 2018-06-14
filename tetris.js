@@ -33,11 +33,10 @@ const placeBlock = (block, row, board) => {
   let blockColumn = parseInt(block.charAt(1))
   let coordinates = positionBlock(blocktype, blockColumn, row)
 
-  if (isSpaceFree(coordinates, board)) {
+  if (isSpaceFree(coordinates, board))
     coordinates.map(coordinate => board[coordinate[1]][coordinate[0]] = "X")
-  } else {
+  else
     placeBlock(block, row + 1, board)
-  }
 
   return board
 }
@@ -48,6 +47,19 @@ const isSpaceFree = (coordinates, board) => {
     .reduce((accumulator, current) => accumulator && current)
 }
 
+const isRowFull = (board, row) => board.reduce((acc, cur) => acc && cur[row] == "X")
+const countFullRows = (acc, board, row) => {
+  if (row < 0) {
+    return acc
+  } else {
+    if (isRowFull(board, row))
+      return countFullRows(acc + 1, board, row - 1)
+    else
+      return countFullRows(acc, board, row - 1)
+  }
+}
+
+fs.unlink('output.txt', (error) => { if (error) console.log('output.txt does not exist yet') })
 fs.readFile(filename, (error, data) => {
   if (error) return console.log(error)
   let input =
@@ -69,6 +81,11 @@ fs.readFile(filename, (error, data) => {
         return placeBlock(move, 0, updatedGame)
       }, tetrisBoard)
 
+    let finalBoard = board.reduce((acc, cur) => acc.length > cur.length ? acc : cur)
+    let fullRows = countFullRows(0, board, finalBoard.length)
+    let output = `${game} --- resulting height: ${finalBoard.length - fullRows} \n`
+
+    fs.appendFile('output.txt', output, (error) => { if (error) console.log('unable to write to file: ', error) })
     console.log(board)
   })
 })
