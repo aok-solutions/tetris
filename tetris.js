@@ -30,5 +30,6 @@ fs.readFile(filename, (error, data) => {
 
     fs.appendFile('output.txt', output, (error) => { if (error) console.log('unable to write to file: ', error) })
     console.log(board)
+    console.log('\n')
   })
 })
